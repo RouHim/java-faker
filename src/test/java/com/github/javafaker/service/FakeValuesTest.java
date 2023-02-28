@@ -1,13 +1,14 @@
 package com.github.javafaker.service;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.Locale;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.Matchers.nullValue;
 
 
 public class FakeValuesTest {
@@ -15,7 +16,7 @@ public class FakeValuesTest {
     private static final String PATH = "address";
     private FakeValues fakeValues;
 
-    @Before
+    @BeforeEach
     public void before() {
         fakeValues = new FakeValues(Locale.ENGLISH, "address.yml", PATH);
     }

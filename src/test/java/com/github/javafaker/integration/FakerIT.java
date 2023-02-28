@@ -1,12 +1,10 @@
 package com.github.javafaker.integration;
 
 import com.github.javafaker.Faker;
-import com.google.common.collect.Maps;
-
 import org.apache.commons.lang3.StringUtils;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,11 +12,12 @@ import java.io.File;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.*;
+import java.util.stream.Stream;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.hamcrest.core.IsNot.not;
 import static org.hamcrest.core.IsNull.notNullValue;
-import static org.junit.Assert.assertThat;
 import static org.reflections.ReflectionUtils.*;
 
 /**
@@ -26,23 +25,20 @@ import static org.reflections.ReflectionUtils.*;
  * and that methods return values. The unit tests should ensure what the values returned
  * are correct. These tests just ensure that the methods can be invoked.
  */
-@RunWith(value = Parameterized.class)
 public class FakerIT {
 
     private static final Logger logger = LoggerFactory.getLogger(FakerIT.class);
-    private final Locale locale;
-    private final Faker faker;
-
     /**
      * a collection of Locales -> Exceptions.
      * In the case of 'pt', city_prefix is '' by design. This test fails because it's testing that all string returning
      * methods return a non blank string. But pt city_prefix is blank ,but the test shouldn't fail. So we add put
      * exceptions like this into this collection.
      */
-    private static final Map<Locale, List<String>> exceptions = Maps.newHashMap();
+    private static final Map<Locale, List<String>> exceptions = new HashMap<>();
+
     static {
         // 'it' has an empty suffix list so it never returns a value
-        exceptions.put(new Locale("it"), Arrays.asList("Name.suffix"));
+        exceptions.put(new Locale("it"), List.of("Name.suffix"));
         exceptions.put(new Locale("es-mx"), Arrays.asList("Address.cityPrefix", "Address.citySuffix"));
         exceptions.put(new Locale("pt"), Arrays.asList("Address.cityPrefix", "Address.citySuffix"));
         exceptions.put(new Locale("uk"), Arrays.asList("Address.stateAbbr", "Address.streetSuffix",
@@ -51,8 +47,11 @@ public class FakerIT {
         exceptions.put(new Locale("pt-br"), Arrays.asList("Address.cityPrefix", "Address.citySuffix"));
         exceptions.put(new Locale("Pt_br"), Arrays.asList("Address.cityPrefix", "Address.citySuffix"));
         exceptions.put(new Locale("pT_Br"), Arrays.asList("Address.cityPrefix", "Address.citySuffix"));
-        exceptions.put(new Locale("pt","Br", "x2"), Arrays.asList("Address.cityPrefix", "Address.citySuffix"));
+        exceptions.put(new Locale("pt", "Br", "x2"), Arrays.asList("Address.cityPrefix", "Address.citySuffix"));
     }
+
+    private final Locale locale;
+    private final Faker faker;
 
     public FakerIT(Locale locale, Random random) {
         this.locale = locale;
@@ -67,15 +66,14 @@ public class FakerIT {
         }
     }
 
-    @Parameterized.Parameters(name = "testing locale {0} and random {1}")
-    public static Collection<Object[]> data() {
+    private static Stream<Object[]> generateData() {
         Object[][] data = new Object[][]{
                 {Locale.ENGLISH, new Random()},
                 {new Locale("pt-BR"), null},
                 {new Locale("pt-br"), null},
                 {new Locale("Pt_br"), null},
                 {new Locale("pT_Br"), null},
-                {new Locale("pt","Br","x2"), null},
+                {new Locale("pt", "Br", "x2"), null},
                 {null, new Random()},
                 {null, null}};
 
@@ -89,10 +87,12 @@ public class FakerIT {
 
         List<Object[]> allData = new ArrayList<Object[]>(Arrays.asList(data));
         allData.addAll(Arrays.asList(dataFromYmlFiles));
-        return allData;
+        return allData.stream();
     }
 
     @Test
+    @ParameterizedTest(name = "testing locale {0} and random {1}")
+    @MethodSource("generateData")
     public void testAllFakerMethodsThatReturnStrings() throws Exception {
         testAllMethodsThatReturnStringsActuallyReturnStrings(faker);
         testAllMethodsThatReturnStringsActuallyReturnStrings(faker.ancient());
@@ -196,13 +196,15 @@ public class FakerIT {
             final String returnValueAsString = (String) returnValue;
             assertThat(failureReason, returnValueAsString, not(isEmptyOrNullString()));
             assertThat(failureReason + " is a slash encoded regex", returnValueAsString,
-                       not(allOf(startsWith("/"), endsWith("/"))));
+                    not(allOf(startsWith("/"), endsWith("/"))));
         }
     }
 
     private boolean isExcepted(Object object, Method method) {
         final List<String> classDotMethod = exceptions.get(this.locale);
-        if (classDotMethod == null) {return false;}
+        if (classDotMethod == null) {
+            return false;
+        }
         return classDotMethod.contains(object.getClass().getSimpleName() + "." + method.getName());
     }
 

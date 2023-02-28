@@ -5,28 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class EnFile {
-    private final String file;
-    private final String path;
-
-    private EnFile(String file) {
-        this(file, file.replaceFirst(".yml", ""));
-    }
-
-    private EnFile(String file, String path) {
-        this.file = file;
-        this.path = path;
-    }
-
-
-    public String getFile() {
-        return file;
-    }
-
-    public String getPath() {
-        return path;
-    }
-
-    private static List<String> FILES = Arrays.asList("address.yml",
+    private static final List<String> FILES = Arrays.asList("address.yml",
             "ancient.yml",
             "animal.yml",
             "app.yml",
@@ -183,9 +162,8 @@ public class EnFile {
             "world_of_warcraft.yml",
             "yoda.yml",
             "zelda.yml");
-
     // files where the search path can't be derived from the filename
-    private static List<EnFile> FILES_WITH_A_DIFFERENT_PATH = Arrays.asList(
+    private static final List<EnFile> FILES_WITH_A_DIFFERENT_PATH = Arrays.asList(
             new EnFile("animal.yml", "creature"),
             new EnFile("cat.yml", "creature"),
             new EnFile("dog.yml", "creature"),
@@ -196,7 +174,18 @@ public class EnFile {
             new EnFile("zelda.yml", "games"),
             new EnFile("elder_scrolls.yml", "games"),
             new EnFile("phone_number.yml", "cell_phone")); // load phone number again with a differen path
+    private final String file;
+    private final String path;
 
+
+    private EnFile(String file) {
+        this(file, file.replaceFirst(".yml", ""));
+    }
+
+    private EnFile(String file, String path) {
+        this.file = file;
+        this.path = path;
+    }
 
     public static List<EnFile> getFiles() {
         List<EnFile> files = new ArrayList<EnFile>();
@@ -206,5 +195,13 @@ public class EnFile {
         files.addAll(FILES_WITH_A_DIFFERENT_PATH);
 
         return files;
+    }
+
+    public String getFile() {
+        return file;
+    }
+
+    public String getPath() {
+        return path;
     }
 }

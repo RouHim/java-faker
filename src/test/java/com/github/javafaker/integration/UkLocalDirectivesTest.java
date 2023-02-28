@@ -1,14 +1,13 @@
 package com.github.javafaker.integration;
 
 import com.github.javafaker.Faker;
-import com.google.common.collect.Lists;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
 
 /**
  * The purpose of these tests is to ensure that the Locales have been properly configured
@@ -29,23 +28,20 @@ public class UkLocalDirectivesTest {
 
         final String streetName = new Faker(uk).address().streetName();
 
-        final ArrayList<String> masc = Lists.newArrayList("пр.", "проспект", "пров.", "провулок");
-        final ArrayList<String> fem = Lists.newArrayList("вул.", "вулиця", "пл.", "площа");
-        
-        boolean startsWithMascPrefix = false,
-                startsWithFemPrefix = false;
-        
+        final List<String> masc = List.of("пр.", "проспект", "пров.", "провулок");
+        final List<String> fem = List.of("вул.", "вулиця", "пл.", "площа");
+
+        boolean startsWithMascPrefix = false, startsWithFemPrefix = false;
+
         for (String mascPrefix : masc) {
             startsWithMascPrefix |= streetName.startsWith(mascPrefix);
         }
         for (String femPrefix : fem) {
             startsWithFemPrefix |= streetName.startsWith(femPrefix);
         }
-        
-        assertThat("the streetname starts with a fem or masc prefix", 
-                startsWithFemPrefix || startsWithMascPrefix, 
-                is(true));
+
+        assertThat("the streetname starts with a fem or masc prefix", startsWithFemPrefix || startsWithMascPrefix, is(true));
     }
-    
-    
+
+
 }

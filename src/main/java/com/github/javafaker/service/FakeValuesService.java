@@ -11,11 +11,7 @@ import org.apache.commons.lang3.StringUtils;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
@@ -189,7 +185,7 @@ public class FakeValuesService {
                 String currentPath = path[p];
                 if (currentValue instanceof Map) {
                     currentValue = ((Map) currentValue).get(currentPath);
-                } else  {
+                } else {
                     currentValue = ((FakeValuesInterface) currentValue).get(currentPath);
                 }
             }
@@ -491,7 +487,7 @@ public class FakeValuesService {
 
         try {
             String fakerMethodName = classAndMethod[0].replaceAll("_", "");
-            MethodAndCoercedArgs fakerAccessor = accessor(faker, fakerMethodName, Collections.<String>emptyList());
+            MethodAndCoercedArgs fakerAccessor = accessor(faker, fakerMethodName, Collections.emptyList());
             if (fakerAccessor == null) {
                 log.fine("Can't find top level faker object named " + fakerMethodName + ".");
                 return null;
@@ -549,10 +545,10 @@ public class FakeValuesService {
             Class<?> toType = ClassUtils.primitiveToWrapper(accessor.getParameterTypes()[i]);
             try {
                 if (toType.isEnum()) {
-                    Method method = toType.getMethod( "valueOf", String.class );
-                    String enumArg = args.get( i ).substring( args.get( i ).indexOf( "." ) + 1 );
-                    Object coercedArg = method.invoke( null, enumArg );
-                    coerced.add( coercedArg );
+                    Method method = toType.getMethod("valueOf", String.class);
+                    String enumArg = args.get(i).substring(args.get(i).indexOf(".") + 1);
+                    Object coercedArg = method.invoke(null, enumArg);
+                    coerced.add(coercedArg);
                 } else {
                     final Constructor<?> ctor = toType.getConstructor(String.class);
                     final Object coercedArgument = ctor.newInstance(args.get(i));

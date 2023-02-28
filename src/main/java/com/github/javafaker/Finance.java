@@ -9,65 +9,13 @@ import java.util.List;
 import java.util.Map;
 
 public class Finance {
+    private static final Map<String, String> countryCodeToBasicBankAccountNumberPattern =
+            createCountryCodeToBasicBankAccountNumberPatternMap();
     private final Faker faker;
+
 
     protected Finance(Faker faker) {
         this.faker = faker;
-    }
-
-
-    private static final Map<String, String> countryCodeToBasicBankAccountNumberPattern =
-            createCountryCodeToBasicBankAccountNumberPatternMap();
-
-    public String creditCard(CreditCardType creditCardType) {
-        final String key = String.format("finance.credit_card.%s", creditCardType.toString().toLowerCase());
-        String value = faker.fakeValuesService().resolve(key, this, faker);
-        final String template = faker.numerify(value);
-
-        String[] split = template.replaceAll("[^0-9]", "").split("");
-        List<Integer> reversedAsInt = new ArrayList<Integer>();
-        for (int i = 0; i < split.length; i++) {
-            final String current = split[split.length - 1 - i];
-            if (!current.isEmpty()) {
-                reversedAsInt.add(Integer.valueOf(current));
-            }
-        }
-        int luhnSum = 0;
-        int multiplier = 1;
-        for (Integer digit : reversedAsInt) {
-            multiplier = (multiplier == 2 ? 1 : 2);
-            luhnSum += sum(String.valueOf(digit * multiplier).split(""));
-        }
-        int luhnDigit = (10 - (luhnSum % 10)) % 10;
-        return template.replace('\\', ' ').replace('/', ' ').trim().replace('L', String.valueOf(luhnDigit).charAt(0));
-    }
-
-    public String creditCard() {
-        CreditCardType type = randomCreditCardType();
-        return creditCard(type);
-    }
-
-    /**
-     * Generates a random Business Identifier Code
-     */
-    public String bic() {
-        return faker.regexify("([A-Z]){4}([A-Z]){2}([0-9A-Z]){2}([0-9A-Z]{3})?");
-    }
-
-    public String iban() {
-        List<String> countryCodes = new ArrayList<String>(countryCodeToBasicBankAccountNumberPattern.keySet());
-        String randomCountryCode = countryCodes.get(faker.random().nextInt(countryCodes.size()));
-        return iban(randomCountryCode);
-    }
-
-    public String iban(String countryCode) {
-        String basicBankAccountNumber = faker.regexify(countryCodeToBasicBankAccountNumberPattern.get(countryCode));
-        String checkSum = calculateIbanChecksum(countryCode, basicBankAccountNumber);
-        return countryCode + checkSum + basicBankAccountNumber;
-    }
-
-    private CreditCardType randomCreditCardType() {
-        return CreditCardType.values()[this.faker.random().nextInt(CreditCardType.values().length)];
     }
 
     private static int sum(String[] string) {
@@ -87,7 +35,7 @@ public class Finance {
         char[] characters = basis.toLowerCase().toCharArray();
         for (char c : characters) {
             if (Character.isLetter(c)) {
-                sb.append(String.valueOf((c - 'a') + 10));
+                sb.append((c - 'a') + 10);
             } else {
                 sb.append(c);
             }
@@ -169,5 +117,56 @@ public class Finance {
         ibanFormats.put("GB", "[A-Z]{4}\\d{6}\\d{8}");
         ibanFormats.put("VG", "[A-Z]{4}\\d{16}");
         return ibanFormats;
+    }
+
+    public String creditCard(CreditCardType creditCardType) {
+        final String key = String.format("finance.credit_card.%s", creditCardType.toString().toLowerCase());
+        String value = faker.fakeValuesService().resolve(key, this, faker);
+        final String template = faker.numerify(value);
+
+        String[] split = template.replaceAll("[^0-9]", "").split("");
+        List<Integer> reversedAsInt = new ArrayList<Integer>();
+        for (int i = 0; i < split.length; i++) {
+            final String current = split[split.length - 1 - i];
+            if (!current.isEmpty()) {
+                reversedAsInt.add(Integer.valueOf(current));
+            }
+        }
+        int luhnSum = 0;
+        int multiplier = 1;
+        for (Integer digit : reversedAsInt) {
+            multiplier = (multiplier == 2 ? 1 : 2);
+            luhnSum += sum(String.valueOf(digit * multiplier).split(""));
+        }
+        int luhnDigit = (10 - (luhnSum % 10)) % 10;
+        return template.replace('\\', ' ').replace('/', ' ').trim().replace('L', String.valueOf(luhnDigit).charAt(0));
+    }
+
+    public String creditCard() {
+        CreditCardType type = randomCreditCardType();
+        return creditCard(type);
+    }
+
+    /**
+     * Generates a random Business Identifier Code
+     */
+    public String bic() {
+        return faker.regexify("([A-Z]){4}([A-Z]){2}([0-9A-Z]){2}([0-9A-Z]{3})?");
+    }
+
+    public String iban() {
+        List<String> countryCodes = new ArrayList<String>(countryCodeToBasicBankAccountNumberPattern.keySet());
+        String randomCountryCode = countryCodes.get(faker.random().nextInt(countryCodes.size()));
+        return iban(randomCountryCode);
+    }
+
+    public String iban(String countryCode) {
+        String basicBankAccountNumber = faker.regexify(countryCodeToBasicBankAccountNumberPattern.get(countryCode));
+        String checkSum = calculateIbanChecksum(countryCode, basicBankAccountNumber);
+        return countryCode + checkSum + basicBankAccountNumber;
+    }
+
+    private CreditCardType randomCreditCardType() {
+        return CreditCardType.values()[this.faker.random().nextInt(CreditCardType.values().length)];
     }
 }

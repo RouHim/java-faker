@@ -9,12 +9,27 @@ import static org.apache.commons.lang3.StringUtils.capitalize;
 import static org.apache.commons.lang3.StringUtils.join;
 
 public class Lorem {
+    private static final char[] letters;
+    private static final char[] characters;
+
+    static {
+        StringBuilder builder = new StringBuilder(36);
+        for (char character = 'a'; character <= 'z'; character++) {
+            builder.append(character);
+        }
+        letters = builder.toString().toCharArray();
+        for (char number = '0'; number <= '9'; number++) {
+            builder.append(number);
+        }
+        characters = builder.toString().toCharArray();
+    }
+
     private final Faker faker;
 
     protected Lorem(Faker faker) {
         this.faker = faker;
     }
-    
+
     public char character() {
         return character(false);
     }
@@ -91,6 +106,7 @@ public class Lorem {
 
     /**
      * Create a sentence with a random number of words within the range 4..10.
+     *
      * @return a random sentence
      */
     public String sentence() {
@@ -99,6 +115,7 @@ public class Lorem {
 
     /**
      * Create a sentence with a random number of words within the range (wordCount+1)..(wordCount+6).
+     *
      * @param wordCount
      * @return a random sentence
      */
@@ -108,8 +125,9 @@ public class Lorem {
 
     /**
      * Create a sentence with a random number of words within the range (wordCount+1)..(wordCount+randomWordsToAdd).</p>
-     * 
+     * <p>
      * Set {@code randomWordsToAdd} to 0 to generate sentences with a fixed number of words.
+     *
      * @param wordCount
      * @param randomWordsToAdd
      * @return a random sentence
@@ -157,20 +175,5 @@ public class Lorem {
         }
         return StringUtils.substring(builder.toString(), 0, numberOfLetters);
     }
-
-    static {
-        StringBuilder builder = new StringBuilder(36);
-        for (char character = 'a'; character <= 'z'; character++) {
-            builder.append(character);
-        }
-        letters = builder.toString().toCharArray();
-        for (char number = '0'; number <= '9'; number++) {
-            builder.append(number);
-        }
-        characters = builder.toString().toCharArray();
-    }
-
-    private static final char[] letters;
-    private static final char[] characters;
 
 }

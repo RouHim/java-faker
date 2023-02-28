@@ -1,11 +1,11 @@
 package com.github.javafaker;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static com.github.javafaker.matchers.MatchesRegularExpression.matchesRegularExpression;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
 
 public class NationTest extends AbstractFakerTest {
 

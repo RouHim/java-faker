@@ -1,8 +1,8 @@
 package com.github.javafaker;
 
-import static java.nio.charset.StandardCharsets.UTF_8;
-
 import java.util.ArrayList;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
  * Faker class for generating Session Initiation Protocol (SIP) related data.
@@ -13,7 +13,7 @@ public final class Sip {
     private final Faker faker;
     private final ArrayList<Integer> portPool;
 
-    protected Sip(final Faker faker) {
+    Sip(final Faker faker) {
         this.faker = faker;
         int port = 40000;
         portPool = new ArrayList<Integer>();
@@ -187,12 +187,12 @@ public final class Sip {
      */
     public String bodyString() {
         return "v=0\n" +
-        "o=" + faker.name().firstName() + " " + faker.internet().uuid() + " IN IP4 " + faker.internet().domainName() + "\n" +
-        "s=-\n" +
-        "c=IN IP4 " + faker.internet().ipV4Address() + "\n" +
-        "t=0 0\n" +
-        "m=audio " + rtpPort() + " RTP/AVP 0\n" +
-        "a=rtpmap:0 PCMU/8000";
+                "o=" + faker.name().firstName() + " " + faker.internet().uuid() + " IN IP4 " + faker.internet().domainName() + "\n" +
+                "s=-\n" +
+                "c=IN IP4 " + faker.internet().ipV4Address() + "\n" +
+                "t=0 0\n" +
+                "m=audio " + rtpPort() + " RTP/AVP 0\n" +
+                "a=rtpmap:0 PCMU/8000";
     }
 
     /**

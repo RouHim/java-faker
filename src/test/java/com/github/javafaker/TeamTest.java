@@ -1,12 +1,12 @@
 package com.github.javafaker;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Locale;
 
 import static com.github.javafaker.matchers.IsStringWithContents.isStringWithContents;
 import static com.github.javafaker.matchers.MatchesRegularExpression.matchesRegularExpression;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 public class TeamTest extends AbstractFakerTest {
 
@@ -31,6 +31,7 @@ public class TeamTest extends AbstractFakerTest {
         Faker zaFaker = new Faker(new Locale("en-ZA"));
         assertThat(zaFaker.team().state(), isStringWithContents());
     }
+
     @Test
     public void testSport() {
         assertThat(faker.team().sport(), matchesRegularExpression("(\\p{L}|\\s)+"));

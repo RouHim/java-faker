@@ -1,20 +1,20 @@
 package com.github.javafaker;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.List;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.isIn;
 import static org.hamcrest.Matchers.isOneOf;
-import static org.junit.Assert.assertThat;
 
 public class OptionsTest extends AbstractFakerTest {
 
     private String[] options;
 
-    @Before
+    @BeforeEach
     public void setupOptions() {
         options = new String[]{"A", "B", "C"};
     }
@@ -31,7 +31,7 @@ public class OptionsTest extends AbstractFakerTest {
 
     @Test
     public void testOptionWithVarargsInteger() {
-        Integer[] integerOptions = new Integer[] { 1, 3, 4, 5};
+        Integer[] integerOptions = new Integer[]{1, 3, 4, 5};
         assertThat(faker.options().option(1, 3, 4, 5), isOneOf(integerOptions));
     }
 
@@ -42,7 +42,7 @@ public class OptionsTest extends AbstractFakerTest {
 
     @Test
     public void testNextArrayElement() {
-        Integer[] array = new Integer[] { 1, 2, 3, 5, 8, 13, 21 };
+        Integer[] array = new Integer[]{1, 2, 3, 5, 8, 13, 21};
 
         for (int i = 1; i < 10; i++) {
             assertThat(faker.options().nextElement(array), isIn(array));

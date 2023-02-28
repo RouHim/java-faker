@@ -1,23 +1,17 @@
 package com.github.javafaker.service;
 
 import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class RandomService {
-    private static final Random SHARED_RANDOM = new Random();
     private final Random random;
 
-    /**
-     * Uses a default shared random.
-     */
     public RandomService() {
-        this(SHARED_RANDOM);
+        this.random = ThreadLocalRandom.current();
     }
 
-    /**
-     * @param random If null is passed in, a default Random is assigned
-     */
     public RandomService(Random random) {
-        this.random = random != null ? random : SHARED_RANDOM;
+        this.random = random != null ? random : ThreadLocalRandom.current();
     }
 
     public int nextInt(int n) {

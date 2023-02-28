@@ -2,7 +2,7 @@ package com.github.javafaker;
 
 public class Barcode {
 
-    private Faker faker;
+    private final Faker faker;
 
     public Barcode(Faker faker) {
         this.faker = faker;
@@ -12,11 +12,11 @@ public class Barcode {
         return faker.resolve("barcode.types");
     }
 
-    public String data(){
+    public String data() {
         return faker.resolve("barcode.datas");
     }
 
-    public String typeAndData(){
+    public String typeAndData() {
         return faker.resolve("barcode.typeAndData");
     }
 }

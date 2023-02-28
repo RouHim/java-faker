@@ -3,13 +3,17 @@
  */
 package com.github.javafaker;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.concurrent.TimeUnit;
+
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  * @author pmiklos
@@ -28,7 +32,7 @@ public class DateAndTimeTest extends AbstractFakerTest {
     }
 
     @Test
-    public void testFutureDateWithMinimum(){
+    public void testFutureDateWithMinimum() {
         for (int i = 0; i < 1000; i++) {
             Date now = new Date();
             Date future = faker.date().future(5, 4, TimeUnit.SECONDS);
@@ -39,7 +43,7 @@ public class DateAndTimeTest extends AbstractFakerTest {
     }
 
     @Test
-    public void testPastDateWithMinimum(){
+    public void testPastDateWithMinimum() {
         for (int i = 0; i < 1000; i++) {
             Date now = new Date();
             Date past = faker.date().past(5, 4, TimeUnit.SECONDS);
@@ -78,16 +82,19 @@ public class DateAndTimeTest extends AbstractFakerTest {
             assertThat("before lower bound", date.getTime(), greaterThanOrEqualTo(now.getTime()));
         }
     }
+
     @Test
-    public void testBetweenThenLargerThanNow(){
-        try{
-        Date now = new Date();
-        Date then = new Date(now.getTime() + 1000);
-        Date date =faker.date().between(then,now);
-        fail("Should be exception");}catch (IllegalArgumentException e){
+    public void testBetweenThenLargerThanNow() {
+        try {
+            Date now = new Date();
+            Date then = new Date(now.getTime() + 1000);
+            Date date = faker.date().between(then, now);
+            fail("Should be exception");
+        } catch (IllegalArgumentException e) {
             assertEquals("Invalid date range, the upper bound date is before the lower bound.", e.getMessage());
         }
     }
+
     @Test
     public void testBirthday() {
         int currentYear = Calendar.getInstance().get(Calendar.YEAR);

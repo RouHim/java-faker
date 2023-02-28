@@ -1,7 +1,7 @@
 package com.github.javafaker;
 
 public class Business {
-    
+
     private final Faker faker;
 
     protected Business(Faker faker) {

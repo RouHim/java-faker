@@ -1,10 +1,10 @@
 package com.github.javafaker;
 
-import com.github.javafaker.repeating.Repeat;
-import org.junit.Test;
+import org.junit.jupiter.api.RepeatedTest;
+import org.junit.jupiter.api.Test;
 
 import static com.github.javafaker.matchers.MatchesRegularExpression.matchesRegularExpression;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 public class DuneTest extends AbstractFakerTest {
 
@@ -12,6 +12,7 @@ public class DuneTest extends AbstractFakerTest {
     public void character() {
         assertThat(faker.dune().character(), matchesRegularExpression("[A-Za-z '\\-\"]+"));
     }
+
 
     @Test
     public void title() {
@@ -29,7 +30,7 @@ public class DuneTest extends AbstractFakerTest {
     }
 
     @Test
-    @Repeat(times = 10000)
+    @RepeatedTest(10000)
     public void randomQuote() {
         assertThat(
                 faker.dune().quote(faker.options().option(Dune.Quote.class)),
@@ -42,7 +43,7 @@ public class DuneTest extends AbstractFakerTest {
     }
 
     @Test
-    @Repeat(times = 10000)
+    @RepeatedTest(10000)
     public void randomSaying() {
         assertThat(
                 faker.dune().saying(faker.options().option(Dune.Saying.class)),

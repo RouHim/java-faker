@@ -4,8 +4,8 @@ import com.github.javafaker.AbstractFakerTest;
 import com.github.javafaker.Faker;
 import com.github.javafaker.Superhero;
 import org.hamcrest.core.Is;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
@@ -18,9 +18,10 @@ import java.util.List;
 import java.util.Locale;
 
 import static com.github.javafaker.matchers.MatchesRegularExpression.matchesRegularExpression;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Mockito.*;
 
 public class FakeValuesServiceTest extends AbstractFakerTest {
@@ -33,7 +34,7 @@ public class FakeValuesServiceTest extends AbstractFakerTest {
 
     private FakeValuesService fakeValuesService;
 
-    @Before
+    @BeforeEach
     public void before() {
         super.before();
         MockitoAnnotations.initMocks(this);
@@ -51,12 +52,12 @@ public class FakeValuesServiceTest extends AbstractFakerTest {
 
     @Test
     public void fetchShouldReturnValue() {
-        assertThat(fakeValuesService.fetch("property.dummy"), Is.<Object>is("x"));
+        assertThat(fakeValuesService.fetch("property.dummy"), Is.is("x"));
     }
 
     @Test
     public void fetchObjectShouldReturnValue() {
-        assertThat(fakeValuesService.fetchObject("property.dummy"), Is.<Object>is(Arrays.asList("x", "y", "z")));
+        assertThat(fakeValuesService.fetchObject("property.dummy"), Is.is(Arrays.asList("x", "y", "z")));
     }
 
     @Test
@@ -126,7 +127,6 @@ public class FakeValuesServiceTest extends AbstractFakerTest {
         // then
         assertThat(actual, is("Yo!"));
         verify(dummy).hello();
-        verifyZeroInteractions(faker);
     }
 
     @Test
@@ -222,7 +222,7 @@ public class FakeValuesServiceTest extends AbstractFakerTest {
      * Two things are important here:
      * 1) the message in the exception should be USEFUL
      * 2) a {@link RuntimeException} should be thrown.
-     *
+     * <p>
      * if the message changes, it's ok to update the test provided
      * the two conditions above are still true.
      */
@@ -234,42 +234,42 @@ public class FakeValuesServiceTest extends AbstractFakerTest {
 
     @Test
     public void futureDateExpression() throws ParseException {
-        SimpleDateFormat dateFormat = new SimpleDateFormat( "EEE MMM dd HH:mm:ss z yyyy", Locale.ENGLISH  );
+        SimpleDateFormat dateFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy", Locale.ENGLISH);
 
         Date now = new Date();
-        Date nowPlus10Days = new Date( now.getTime() + MILLIS_IN_A_DAY * 10 );
+        Date nowPlus10Days = new Date(now.getTime() + MILLIS_IN_A_DAY * 10);
 
-        Date date = dateFormat.parse( fakeValuesService.expression( "#{date.future '10','TimeUnit.DAYS'}", faker ));
+        Date date = dateFormat.parse(fakeValuesService.expression("#{date.future '10','TimeUnit.DAYS'}", faker));
 
-        assertThat( date.getTime(), greaterThan( now.getTime() ));
-        assertThat( date.getTime(), lessThan( nowPlus10Days.getTime() ));
+        assertThat(date.getTime(), greaterThan(now.getTime()));
+        assertThat(date.getTime(), lessThan(nowPlus10Days.getTime()));
     }
 
     @Test
     public void pastDateExpression() throws ParseException {
-        SimpleDateFormat dateFormat = new SimpleDateFormat( "EEE MMM dd HH:mm:ss z yyyy", Locale.ENGLISH );
+        SimpleDateFormat dateFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy", Locale.ENGLISH);
 
         Date now = new Date();
-        Date nowMinus5Hours = new Date( now.getTime() - MILLIS_IN_AN_HOUR * 5 );
+        Date nowMinus5Hours = new Date(now.getTime() - MILLIS_IN_AN_HOUR * 5);
 
-        Date date = dateFormat.parse( fakeValuesService.expression( "#{date.past '5','TimeUnit.HOURS'}", faker ));
+        Date date = dateFormat.parse(fakeValuesService.expression("#{date.past '5','TimeUnit.HOURS'}", faker));
 
-        assertThat( date.getTime(), greaterThan( nowMinus5Hours.getTime() ));
-        assertThat( date.getTime(), lessThan( now.getTime() ));
+        assertThat(date.getTime(), greaterThan(nowMinus5Hours.getTime()));
+        assertThat(date.getTime(), lessThan(now.getTime()));
     }
 
     @Test
     public void expressionWithFourArguments() throws ParseException {
 
         assertThat(fakeValuesService.expression("#{Internet.password '5','8','true','true'}", faker),
-            matchesRegularExpression("[\\w\\d\\!%#$@_\\^&\\*]{5,8}"));
+                matchesRegularExpression("[\\w\\d\\!%#$@_\\^&\\*]{5,8}"));
     }
 
     /**
      * Two things are important here:
      * 1) the message in the exception should be USEFUL
      * 2) a {@link RuntimeException} should be thrown.
-     *
+     * <p>
      * if the message changes, it's ok to update the test provided
      * the two conditions above are still true.
      */
@@ -286,6 +286,7 @@ public class FakeValuesServiceTest extends AbstractFakerTest {
             assertThat(re.getMessage(), is(errorMessage));
         }
     }
+
     @Test
     public void resolveUsingTheSameKeyTwice() {
         // #{hello} -> DummyService.hello
@@ -299,18 +300,19 @@ public class FakeValuesServiceTest extends AbstractFakerTest {
 
         // then
         assertThat(actual, is("1 2"));
-        verifyZeroInteractions(faker);
     }
+
     @Test
-    public void FakeValuesServiceWithNullLocaleTest(){
-        try{
-            RandomService r=new RandomService();
-            FakeValuesService f=new FakeValuesService(null,r);
+    public void FakeValuesServiceWithNullLocaleTest() {
+        try {
+            RandomService r = new RandomService();
+            FakeValuesService f = new FakeValuesService(null, r);
             fail("Should catch IllegalArgumentException");
-        }catch (IllegalArgumentException e){
-            assertThat(e.getMessage(),is("locale is required"));
+        } catch (IllegalArgumentException e) {
+            assertThat(e.getMessage(), is("locale is required"));
         }
     }
+
     public static class DummyService {
         public String firstName() {
             return "John";

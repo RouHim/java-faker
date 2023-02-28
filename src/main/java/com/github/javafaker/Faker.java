@@ -113,7 +113,7 @@ public class Faker {
     }
 
     public Faker(Locale locale) {
-        this(locale, (Random)null);
+        this(locale, (Random) null);
     }
 
     public Faker(Random random) {
@@ -515,7 +515,9 @@ public class Faker {
         return team;
     }
 
-    public Beer beer() { return beer; }
+    public Beer beer() {
+        return beer;
+    }
 
     public University university() {
         return university;
@@ -670,26 +672,40 @@ public class Faker {
     }
 
     public Photography photography() {
-        return  photography;
+        return photography;
     }
 
     public StarCraft starCraft() {
         return starCraft;
     }
 
-    public BojackHorseman bojackHorseman() { return bojackHorseman; }
+    public BojackHorseman bojackHorseman() {
+        return bojackHorseman;
+    }
 
-    public Disease disease() {return disease; }
+    public Disease disease() {
+        return disease;
+    }
 
-    public Basketball basketball() { return basketball; }
+    public Basketball basketball() {
+        return basketball;
+    }
 
-    public Barcode barcode() { return barcode; }
+    public Barcode barcode() {
+        return barcode;
+    }
 
-    public Sip sip() { return sip; }
+    public Sip sip() {
+        return sip;
+    }
 
-    public EnglandFootBall englandfootball() { return englandfootball; }
+    public EnglandFootBall englandfootball() {
+        return englandfootball;
+    }
 
-    public Mountain mountain() { return mountain; }
+    public Mountain mountain() {
+        return mountain;
+    }
 
     public String resolve(String key) {
         return this.fakeValuesService.resolve(key, this, this);

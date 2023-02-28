@@ -1,7 +1,6 @@
 package com.github.javafaker.matchers;
 
 import org.hamcrest.Description;
-import org.hamcrest.Factory;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
 
@@ -13,6 +12,10 @@ public class MatchesRegularExpression extends TypeSafeMatcher<String> {
         this.regularExpression = regularExpression;
     }
 
+    public static Matcher<String> matchesRegularExpression(String regularExpression) {
+        return new MatchesRegularExpression(regularExpression);
+    }
+
     @Override
     protected boolean matchesSafely(String item) {
         return item.matches(regularExpression);
@@ -21,10 +24,5 @@ public class MatchesRegularExpression extends TypeSafeMatcher<String> {
     @Override
     public void describeTo(Description description) {
         description.appendText("to match the regular expression " + regularExpression);
-    }
-
-    @Factory
-    public static <T> Matcher<String> matchesRegularExpression(String regularExpression) {
-        return new MatchesRegularExpression(regularExpression);
     }
 }

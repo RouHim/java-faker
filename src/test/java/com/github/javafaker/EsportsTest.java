@@ -1,9 +1,9 @@
 package com.github.javafaker;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static com.github.javafaker.matchers.MatchesRegularExpression.matchesRegularExpression;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 public class EsportsTest extends AbstractFakerTest {
 
@@ -14,7 +14,7 @@ public class EsportsTest extends AbstractFakerTest {
 
     @Test
     public void team() {
-        assertThat(faker.esports().team(),  matchesRegularExpression("((\\w|.)+ ?)+"));
+        assertThat(faker.esports().team(), matchesRegularExpression("((\\w|.)+ ?)+"));
     }
 
     @Test

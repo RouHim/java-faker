@@ -19,6 +19,12 @@ public class FakeValues implements FakeValuesInterface {
         this(locale, getFilename(locale), getFilename(locale));
     }
 
+    FakeValues(Locale locale, String filename, String path) {
+        this.locale = locale;
+        this.filename = filename;
+        this.path = path;
+    }
+
     private static String getFilename(Locale locale) {
         final StringBuilder filename = new StringBuilder(language(locale));
         if (!"".equals(locale.getCountry())) {
@@ -36,12 +42,6 @@ public class FakeValues implements FakeValuesInterface {
             return "he";
         }
         return l.getLanguage();
-    }
-
-    FakeValues(Locale locale, String filename, String path) {
-        this.locale = locale;
-        this.filename = filename;
-        this.path = path;
     }
 
     @Override
@@ -78,7 +78,7 @@ public class FakeValues implements FakeValuesInterface {
         }
         try {
             stream.close();
-        } catch (IOException ex){
+        } catch (IOException ex) {
             return null;
         }
         return (Map) localeBased.get("faker");
