@@ -10,6 +10,7 @@ import java.util.Locale;
 import java.util.Map;
 
 public class FakeValues implements FakeValuesInterface {
+    private static final String PATH_PREFIX = "/com/github/rouhim/javafaker";
     private final Locale locale;
     private final String filename;
     private final String path;
@@ -54,9 +55,9 @@ public class FakeValues implements FakeValuesInterface {
     }
 
     private Map loadValues() {
-        String pathWithLocaleAndFilename = "/" + locale.getLanguage() + "/" + this.filename;
-        String pathWithFilename = "/" + filename + ".yml";
-        String pathWithLocale = "/" + locale.getLanguage() + ".yml";
+        String pathWithLocaleAndFilename = "%s/%s/%s".formatted(PATH_PREFIX, locale.getLanguage(), this.filename);
+        String pathWithFilename = "%s/%s.yml".formatted(PATH_PREFIX, filename);
+        String pathWithLocale = "%s/%s.yml".formatted(PATH_PREFIX, locale.getLanguage());
 
         List<String> paths = Arrays.asList(pathWithLocaleAndFilename, pathWithFilename, pathWithLocale);
         InputStream stream = null;
